@@ -1,6 +1,7 @@
 package rs.ac.ni.pmf.web.issuetracker.model.entity;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -25,6 +26,16 @@ public class ProjectEntity
 	@UpdateTimestamp
 	ZonedDateTime modifiedOn;
 
-	@OneToMany(mappedBy = "project")
-	List<IssueEntity> issues;
+	@OneToMany(mappedBy = "project", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@Builder.Default
+	List<IssueEntity> issues = new ArrayList<>();
+
+	public void addIssues(IssueEntity... entities)
+	{
+		for (final IssueEntity issueEntity : entities)
+		{
+			issueEntity.setProject(this);
+			issues.add(issueEntity);
+		}
+	}
 }
