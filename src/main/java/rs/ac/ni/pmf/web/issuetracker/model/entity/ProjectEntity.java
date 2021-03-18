@@ -30,6 +30,10 @@ public class ProjectEntity
 	@Builder.Default
 	List<IssueEntity> issues = new ArrayList<>();
 
+	@ManyToMany(mappedBy = "projects", cascade = CascadeType.ALL)
+	@Builder.Default
+	List<UserEntity> users = new ArrayList<>();
+
 	public void addIssues(IssueEntity... entities)
 	{
 		for (final IssueEntity issueEntity : entities)

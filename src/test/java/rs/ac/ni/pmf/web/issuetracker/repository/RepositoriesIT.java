@@ -2,15 +2,14 @@ package rs.ac.ni.pmf.web.issuetracker.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import rs.ac.ni.pmf.web.issuetracker.model.entity.IssueEntity;
-import rs.ac.ni.pmf.web.issuetracker.model.entity.ProjectEntity;
+import rs.ac.ni.pmf.web.issuetracker.model.entity.*;
 
 @DataJpaTest
-	//@SpringBootTest
 class RepositoriesIT
 {
 	@Autowired
@@ -18,6 +17,9 @@ class RepositoriesIT
 
 	@Autowired
 	private IssuesRepository _issuesRepository;
+
+	@Autowired
+	private UsersRepository _usersRepository;
 
 	@Test
 	void testDatabase()
@@ -69,5 +71,32 @@ class RepositoriesIT
 
 		_projectsRepository.delete(savedEntity);
 		assertThat(_issuesRepository.count()).isEqualTo(0);
+	}
+
+	@Test
+	public void shouldAssignUserToProject()
+	{
+		final UserEntity userEntity = UserEntity.builder()
+			.firstName("Marko")
+			.lastName("Milosevic")
+			.username("markom")
+			.password("pass123")
+			.build();
+
+		final UserEntity savedUser = _usersRepository.save(userEntity);
+		System.out.println(savedUser.getId().toString());
+
+		final ProjectEntity projectEntity = _projectsRepository.save(ProjectEntity.builder()
+			.name("Test")
+			.users(Arrays.asList(savedUser))
+			.build());
+
+		System.out.println(projectEntity.getUsers().size());
+
+		final ProjectEntity project = _projectsRepository.findById(projectEntity.getId())
+			.orElseThrow(() -> new RuntimeException());
+
+		System.out.println(project.getUsers().size());
+		System.out.println(project.getUsers().get(0).getFirstName());
 	}
 }

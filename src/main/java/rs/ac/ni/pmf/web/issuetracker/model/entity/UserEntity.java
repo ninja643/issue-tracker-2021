@@ -1,0 +1,33 @@
+package rs.ac.ni.pmf.web.issuetracker.model.entity;
+
+import java.util.*;
+import javax.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserEntity
+{
+	@Id
+	@GeneratedValue
+	UUID id;
+
+	String firstName;
+	String lastName;
+
+	String username;
+	String password;
+
+	@ManyToMany
+	@JoinTable(
+		name = "users_projects",
+		joinColumns = @JoinColumn(name = "user_id"),
+		inverseJoinColumns = @JoinColumn(name = "project_id")
+	)
+	@Builder.Default
+	List<ProjectEntity> projects = new ArrayList<>();
+}

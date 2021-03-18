@@ -1,11 +1,14 @@
 package rs.ac.ni.pmf.web.issuetracker.config;
 
+import java.util.Arrays;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import rs.ac.ni.pmf.web.issuetracker.model.entity.IssueEntity;
-import rs.ac.ni.pmf.web.issuetracker.model.entity.ProjectEntity;
+import rs.ac.ni.pmf.web.issuetracker.model.entity.*;
+import rs.ac.ni.pmf.web.issuetracker.repository.ProjectsRepository;
+import rs.ac.ni.pmf.web.issuetracker.repository.UsersRepository;
 import rs.ac.ni.pmf.web.issuetracker.service.ProjectsService;
 
 @Configuration
@@ -13,12 +16,36 @@ import rs.ac.ni.pmf.web.issuetracker.service.ProjectsService;
 public class StartupConfiguration
 {
 	@Bean
-	public CommandLineRunner getRunner(final ProjectsService projectsService)
+	public CommandLineRunner getRunner(
+		final ProjectsService projectsService,
+		final UsersRepository usersRepository,
+		final ProjectsRepository projectsRepository)
 	{
 		return args -> {
 			log.warn("Showing all projects saved at start up");
+
+			initializeUsers(usersRepository, projectsRepository);
+
 			projectsService.showProjects();
 		};
+	}
+
+	public void initializeUsers(final UsersRepository usersRepository, final ProjectsRepository projectsRepository)
+	{
+		final UserEntity userEntity = UserEntity.builder()
+			.firstName("Marko")
+			.lastName("Milosevic")
+			.username("markom")
+			.password("pass123")
+			.build();
+
+		final UserEntity savedUser = usersRepository.save(userEntity);
+//		System.out.println(savedUser.getId().toString());
+//
+//		final ProjectEntity projectEntity = projectsRepository.save(ProjectEntity.builder()
+//			.name("Test")
+//			.users(Arrays.asList(savedUser))
+//			.build());
 	}
 
 	private void initializeData(final ProjectsService projectsService)
@@ -39,5 +66,4 @@ public class StartupConfiguration
 		final IssueEntity issue5 = projectsService.addIssue("Test5", "test", project2);
 		log.info("Added issue {}", issue5.getId());
 	}
-
 }
