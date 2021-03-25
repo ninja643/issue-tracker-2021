@@ -8,7 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.*;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "projects", uniqueConstraints = { @UniqueConstraint(columnNames = "name") })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

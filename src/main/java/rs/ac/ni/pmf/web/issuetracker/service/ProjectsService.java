@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import rs.ac.ni.pmf.web.issuetracker.exception.ProjectNotFoundException;
 import rs.ac.ni.pmf.web.issuetracker.model.entity.IssueEntity;
 import rs.ac.ni.pmf.web.issuetracker.model.entity.ProjectEntity;
 import rs.ac.ni.pmf.web.issuetracker.repository.IssuesRepository;
@@ -45,5 +46,20 @@ public class ProjectsService
 			IssueEntity.builder().summary(summary).description(description).project(projectEntity).build();
 
 		return _issuesRepository.save(issueEntity);
+	}
+
+	public ProjectEntity findByProjectName(final String projectName)
+	{
+//		final ProjectEntity entity = _projectsRepository.findByName(projectName);
+//
+//		if (entity != null)
+//		{
+//			return entity;
+//		}
+//
+//		throw new ProjectNotFoundException("Project '" + projectName + "' does not exist");
+
+		return _projectsRepository.findByName(projectName)
+			.orElseThrow(() -> new ProjectNotFoundException("Project '" + projectName + "' does not exist"));
 	}
 }
