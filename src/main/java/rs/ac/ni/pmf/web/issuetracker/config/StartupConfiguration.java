@@ -1,10 +1,8 @@
 package rs.ac.ni.pmf.web.issuetracker.config;
 
-import java.util.Arrays;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import rs.ac.ni.pmf.web.issuetracker.model.entity.*;
 import rs.ac.ni.pmf.web.issuetracker.repository.ProjectsRepository;
@@ -24,7 +22,8 @@ public class StartupConfiguration
 		return args -> {
 			log.warn("Showing all projects saved at start up");
 
-			initializeUsers(usersRepository, projectsRepository);
+//			initializeData(projectsService);
+//			initializeUsers(usersRepository, projectsRepository);
 
 			projectsService.showProjects();
 		};
