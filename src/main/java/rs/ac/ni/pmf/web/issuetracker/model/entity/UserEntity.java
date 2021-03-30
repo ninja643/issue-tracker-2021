@@ -19,10 +19,11 @@ public class UserEntity
 	String firstName;
 	String lastName;
 
+	@Column(name = "username")
 	String username;
 	String password;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 		name = "users_projects",
 		joinColumns = @JoinColumn(name = "user_id"),

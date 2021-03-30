@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.*;
+import rs.ac.ni.pmf.web.issuetracker.model.entity.ProjectEntity;
 import rs.ac.ni.pmf.web.issuetracker.model.entity.UserEntity;
 
 @DataJpaTest
@@ -15,15 +17,27 @@ class UsersRepositoryTest
 	@Autowired
 	private UsersRepository _usersRepository;
 
+	@Autowired
+	private ProjectsRepository _projectsRepository;
+
 	@BeforeEach
 	public void initializeData()
 	{
-		_usersRepository.save(UserEntity.builder()
+		UserEntity user = _usersRepository.save(UserEntity.builder()
 			.username("pera")
 			.password("pera")
 			.firstName("Pera")
 			.lastName("Peric")
 			.build());
+
+		ProjectEntity projectEntity = ProjectEntity.builder()
+			.name("Project1")
+			.build();
+
+		projectEntity.addUser(user);
+
+		_projectsRepository.save(projectEntity);
+
 		_usersRepository.save(UserEntity.builder()
 			.username("mika")
 			.password("mika")
@@ -78,5 +92,52 @@ class UsersRepositoryTest
 	public void shouldFindComplicated()
 	{
 		_usersRepository.findByFirstNameIgnoreCaseOrLastNameIgnoreCaseOrderByFirstNameDescLastNameAsc("pera", "peric");
+	}
+
+	@Test
+	public void shouldUseSorting()
+	{
+		List<UserEntity> users = _usersRepository.findAll(Sort.by("lastName", "firstName"));
+		assertThat(users.get(0).getLastName()).isEqualTo("Mikic");
+		assertThat(users.get(0).getFirstName()).isEqualTo("Mika");
+	}
+
+	@Test
+	public void shouldUsePaging()
+	{
+		int page = 0;
+		int pageSize = 3;
+
+		Page<UserEntity> currentPage;
+
+		do
+		{
+			currentPage = _usersRepository.findAll(PageRequest.of(page, pageSize));
+
+			currentPage.stream().forEach(userEntity -> System.out.println(userEntity.toString()));
+			System.out.println("----------------------------------");
+
+			++page;
+		} while (currentPage.hasNext());
+	}
+
+	@Test
+	public void shouldUseCustomQuery()
+	{
+		System.out.println(_usersRepository.getMeAUser("pera"));
+
+		_usersRepository.getSomeUsers("Mi", Sort.by("lastName"))
+			.stream().forEach(userEntity -> System.out.println(userEntity.toString()));
+	}
+
+	@Test
+	public void shouldModifyUser()
+	{
+		int changed = _usersRepository.updateFirstName("pera", "Petar");
+		System.out.println("Changed: " + changed);
+
+		UserEntity user = _usersRepository.findByUsername("pera").get();
+		System.out.println(user.getFirstName());
+		System.out.println(user.getProjects().size());
 	}
 }

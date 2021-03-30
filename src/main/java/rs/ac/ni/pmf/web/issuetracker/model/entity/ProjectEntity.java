@@ -42,4 +42,10 @@ public class ProjectEntity
 			issues.add(issueEntity);
 		}
 	}
+
+	public void addUser(UserEntity userEntity)
+	{
+		users.add(userEntity);
+		userEntity.getProjects().add(this);
+	}
 }
