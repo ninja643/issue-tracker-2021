@@ -102,42 +102,42 @@ class UsersRepositoryTest
 		assertThat(users.get(0).getFirstName()).isEqualTo("Mika");
 	}
 
-	@Test
-	public void shouldUsePaging()
-	{
-		int page = 0;
-		int pageSize = 3;
-
-		Page<UserEntity> currentPage;
-
-		do
-		{
-			currentPage = _usersRepository.findAll(PageRequest.of(page, pageSize));
-
-			currentPage.stream().forEach(userEntity -> System.out.println(userEntity.toString()));
-			System.out.println("----------------------------------");
-
-			++page;
-		} while (currentPage.hasNext());
-	}
-
-	@Test
-	public void shouldUseCustomQuery()
-	{
-		System.out.println(_usersRepository.getMeAUser("pera"));
-
-		_usersRepository.getSomeUsers("Mi", Sort.by("lastName"))
-			.stream().forEach(userEntity -> System.out.println(userEntity.toString()));
-	}
-
-	@Test
-	public void shouldModifyUser()
-	{
-		int changed = _usersRepository.updateFirstName("pera", "Petar");
-		System.out.println("Changed: " + changed);
-
-		UserEntity user = _usersRepository.findByUsername("pera").get();
-		System.out.println(user.getFirstName());
-		System.out.println(user.getProjects().size());
-	}
+//	@Test
+//	public void shouldUsePaging()
+//	{
+//		int page = 0;
+//		int pageSize = 3;
+//
+//		Page<UserEntity> currentPage;
+//
+//		do
+//		{
+//			currentPage = _usersRepository.findAll(PageRequest.of(page, pageSize));
+//
+//			currentPage.stream().forEach(userEntity -> System.out.println(userEntity.toString()));
+//			System.out.println("----------------------------------");
+//
+//			++page;
+//		} while (currentPage.hasNext());
+//	}
+//
+//	@Test
+//	public void shouldUseCustomQuery()
+//	{
+//		System.out.println(_usersRepository.getMeAUser("pera"));
+//
+//		_usersRepository.getSomeUsers("Mi", Sort.by("lastName"))
+//			.stream().forEach(userEntity -> System.out.println(userEntity.toString()));
+//	}
+//
+//	@Test
+//	public void shouldModifyUser()
+//	{
+//		int changed = _usersRepository.updateFirstName("pera", "Petar");
+//		System.out.println("Changed: " + changed);
+//
+//		UserEntity user = _usersRepository.findByUsername("pera").get();
+//		System.out.println(user.getFirstName());
+//		System.out.println(user.getProjects().size());
+//	}
 }
