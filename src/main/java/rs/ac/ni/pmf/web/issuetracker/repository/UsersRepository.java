@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import rs.ac.ni.pmf.web.issuetracker.model.entity.UserEntity;
 
-public interface UsersRepository extends JpaRepository<UserEntity, UUID>
+public interface UsersRepository extends JpaRepository<UserEntity, UUID>, JpaSpecificationExecutor<UserEntity>
 {
 	Optional<UserEntity> findByUsername(String username);
 
