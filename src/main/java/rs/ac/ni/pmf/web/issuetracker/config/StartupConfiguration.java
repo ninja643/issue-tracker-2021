@@ -25,7 +25,7 @@ public class StartupConfiguration
 //			initializeData(projectsService);
 //			initializeUsers(usersRepository, projectsRepository);
 
-			projectsService.showProjects();
+//			projectsService.showProjects();
 		};
 	}
 
