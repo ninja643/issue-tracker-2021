@@ -1,11 +1,12 @@
 package rs.ac.ni.pmf.web.issuetracker.model.dto;
 
 import java.time.ZonedDateTime;
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
 @Value
 @Builder
+@NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class ProjectDTO
 {
 	Long id;
